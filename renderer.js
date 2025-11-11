@@ -22,48 +22,88 @@ function addReward() {
     const container = document.getElementById('rewardsContainer');
 
     const rewardCard = document.createElement('div');
-    rewardCard.className = 'reward-card';
+    rewardCard.className = 'reward-card collapsed';
     rewardCard.id = `reward-${rewardId}`;
 
     rewardCard.innerHTML = `
-        <div class="reward-header">
-            <span class="reward-title">Reward #${rewardId + 1}</span>
-            <button class="btn btn-danger" onclick="removeReward(${rewardId})">🗑️ Remove</button>
+        <div class="reward-header clickable" onclick="toggleReward(${rewardId})">
+            <div class="reward-info">
+                <span class="reward-title">Reward #${rewardId + 1}</span>
+                <span class="reward-name-preview">Click to expand</span>
+            </div>
+            <div class="reward-actions">
+                <span class="expand-icon">▼</span>
+                <button class="btn btn-danger btn-small" onclick="event.stopPropagation(); removeReward(${rewardId})">🗑️</button>
+            </div>
         </div>
         
-        <div class="input-group">
-            <label>Item Name:</label>
-            <input type="text" class="reward-name" placeholder="e.g., Snafu_ScarH_Tan_GUN" onchange="updatePreview()">
-        </div>
-        
-        <div class="grid-3">
+        <div class="reward-content" style="display: none;">
             <div class="input-group">
-                <label>Chance to Spawn:</label>
-                <input type="number" class="reward-chance" value="1" step="0.01" min="0" max="1" onchange="updatePreview()">
+                <label>Item Name:</label>
+                <input type="text" class="reward-name" placeholder="e.g., Snafu_ScarH_Tan_GUN" onchange="updateRewardPreview(${rewardId}); updatePreview()">
             </div>
             
-            <div class="input-group">
-                <label>Quantity Min:</label>
-                <input type="number" class="reward-min" value="1" min="1" onchange="updatePreview()">
+            <div class="grid-3">
+                <div class="input-group">
+                    <label>Chance to Spawn:</label>
+                    <input type="number" class="reward-chance" value="1" step="0.01" min="0" max="1" onchange="updatePreview()">
+                </div>
+                
+                <div class="input-group">
+                    <label>Quantity Min:</label>
+                    <input type="number" class="reward-min" value="1" min="1" onchange="updatePreview()">
+                </div>
+                
+                <div class="input-group">
+                    <label>Quantity Max:</label>
+                    <input type="number" class="reward-max" value="1" min="1" onchange="updatePreview()">
+                </div>
             </div>
             
-            <div class="input-group">
-                <label>Quantity Max:</label>
-                <input type="number" class="reward-max" value="1" min="1" onchange="updatePreview()">
+            <div class="attachments-section">
+                <div class="attachments-header">
+                    <h4>Attachments</h4>
+                    <button class="btn btn-add btn-small" onclick="addAttachment(${rewardId})">+ Add Attachment</button>
+                </div>
+                <div id="attachments-${rewardId}"></div>
             </div>
-        </div>
-        
-        <div class="attachments-section">
-            <div class="attachments-header">
-                <h4>Attachments</h4>
-                <button class="btn btn-add btn-small" onclick="addAttachment(${rewardId})">+ Add Attachment</button>
-            </div>
-            <div id="attachments-${rewardId}"></div>
         </div>
     `;
 
     container.appendChild(rewardCard);
     updatePreview();
+}
+
+// Toggle reward visibility
+function toggleReward(rewardId) {
+    const rewardCard = document.getElementById(`reward-${rewardId}`);
+    const content = rewardCard.querySelector('.reward-content');
+    const expandIcon = rewardCard.querySelector('.expand-icon');
+
+    if (content.style.display === 'none') {
+        content.style.display = 'block';
+        expandIcon.textContent = '▲';
+        rewardCard.classList.remove('collapsed');
+        rewardCard.classList.add('expanded');
+    } else {
+        content.style.display = 'none';
+        expandIcon.textContent = '▼';
+        rewardCard.classList.remove('expanded');
+        rewardCard.classList.add('collapsed');
+    }
+}
+
+// Update reward name preview
+function updateRewardPreview(rewardId) {
+    const rewardCard = document.getElementById(`reward-${rewardId}`);
+    const nameInput = rewardCard.querySelector('.reward-name');
+    const namePreview = rewardCard.querySelector('.reward-name-preview');
+
+    if (nameInput.value.trim()) {
+        namePreview.textContent = nameInput.value;
+    } else {
+        namePreview.textContent = 'Click to expand';
+    }
 }
 
 // Remove reward
@@ -307,6 +347,9 @@ function loadData(data) {
             rewardCard.querySelector('.reward-chance').value = reward.chanceToSpawn || 1;
             rewardCard.querySelector('.reward-min').value = reward.quantityMin || 1;
             rewardCard.querySelector('.reward-max').value = reward.quantityMax || 1;
+
+            // Update reward preview
+            updateRewardPreview(rewardId);
 
             // Load attachments
             if (reward.attachments && Array.isArray(reward.attachments)) {

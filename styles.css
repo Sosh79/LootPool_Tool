@@ -168,9 +168,17 @@ main {
     background: #f8f9fa;
     border: 2px solid #e0e0e0;
     border-radius: 10px;
-    padding: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     transition: all 0.3s;
+    overflow: hidden;
+}
+
+.reward-card.collapsed {
+    padding: 15px;
+}
+
+.reward-card.expanded {
+    padding: 20px;
 }
 
 .reward-card:hover {
@@ -182,9 +190,51 @@ main {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #e0e0e0;
+    margin-bottom: 0;
+    padding: 0;
+    border: none;
+}
+
+.reward-header.clickable {
+    cursor: pointer;
+    padding: 10px 0;
+}
+
+.reward-header.clickable:hover {
+    background: rgba(102, 126, 234, 0.05);
+    margin: -10px -15px 0 -15px;
+    padding: 10px 15px;
+    border-radius: 8px;
+}
+
+.reward-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.reward-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.expand-icon {
+    font-size: 16px;
+    color: #667eea;
+    transition: transform 0.3s;
+}
+
+.reward-name-preview {
+    font-size: 14px;
+    color: #6c757d;
+    font-style: italic;
+}
+
+.reward-content {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 2px solid #e0e0e0;
 }
 
 .reward-title {
@@ -280,4 +330,41 @@ main {
 .attachments-header h4 {
     color: #495057;
     font-size: 16px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    main {
+        grid-template-columns: 1fr;
+    }
+    
+    .grid-3 {
+        grid-template-columns: 1fr;
+    }
+    
+    .reward-header.clickable:hover {
+        margin: -10px -10px 0 -10px;
+        padding: 10px 10px;
+    }
+    
+    .header-buttons {
+        flex-direction: column;
+        gap: 5px;
+    }
+}
+
+/* Animation for expanding/collapsing */
+.reward-content {
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
