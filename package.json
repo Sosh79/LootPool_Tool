@@ -1,0 +1,17 @@
+{
+  "name": "lootpool-tool",
+  "version": "1.0.0",
+  "description": "Loot Pool Management Tool",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "keywords": ["electron", "lootpool"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1"
+  }
+}
